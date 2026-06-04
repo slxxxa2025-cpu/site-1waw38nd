@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACK VIA LINK</title>
+    
+    <!-- Telegram WebApp -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="theme-color" content="#0a0a0a">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(255,0,0,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,0,0,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px; height: 2px;
+            background: #ff0000;
+            border-radius: 50%;
+            animation: floatUp 8s infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 0; transform: translateY(100vh) translateX(0); }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-10vh) translateX(100px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 50px 0 30px;
+        }
+
+        .header .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #0a0a0a, #1a0000);
+            border: 2px solid #ff0000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 45px;
+            box-shadow: 0 0 50px rgba(255,0,0,0.2);
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(255,0,0,0.2); }
+            50% { box-shadow: 0 0 60px rgba(255,0,0,0.4); }
+        }
+
+        .header h1 {
+            font-size: 36px;
+            background: linear-gradient(135deg, #ff0000, #ff4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .header .sub {
+            color: #666;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .typing {
+            color: #ff0000;
+            font-size: 16px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .typing .cursor {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: #ff0000;
+            box-shadow: 0 0 30px rgba(255,0,0,0.15);
+            transform: translateY(-3px);
+        }
+
+        .stat-card .icon { font-size: 35px; margin-bottom: 8px; }
+        .stat-card .number { font-size: 32px; font-weight: bold; color: #ff0000; }
+        .stat-card .label { color: #666; font-size: 12px; margin-top: 5px; }
+
+        .section { margin: 40px 0; }
+
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title .line { flex: 1; height: 1px; background: #222; }
+        .section-title span { color: #ff0000; }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .tool-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 18px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            border-color: #ff0000;
+            box-shadow: 0 0 20px rgba(255,0,0,0.1);
+        }
+
+        .tool-card .tool-icon { font-size: 30px; margin-bottom: 8px; }
+        .tool-card .tool-name { font-size: 15px; font-weight: bold; margin-bottom: 5px; }
+        .tool-card .tool-desc { color: #666; font-size: 11px; }
+        .tool-card .tool-price { color: #ff0000; font-size: 12px; margin-top: 8px; font-weight: bold; }
+
+        .links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .link-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .link-card:hover {
+            border-color: #ff4444;
+            box-shadow: 0 0 20px rgba(255,68,68,0.15);
+            transform: translateY(-3px);
+        }
+
+        .link-card .link-icon { font-size: 40px; margin-bottom: 10px; }
+        .link-card .link-name { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+        .link-card .link-desc { color: #666; font-size: 12px; }
+
+        .dev-section {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .dev-avatar {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff0000, #ff4444);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            flex-shrink: 0;
+        }
+
+        .dev-info h3 { font-size: 20px; margin-bottom: 5px; }
+        .dev-info p { color: #666; font-size: 13px; margin: 3px 0; }
+        .dev-info a { color: #ff4444; text-decoration: none; }
+        .dev-info a:hover { text-decoration: underline; }
+
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #444;
+            font-size: 12px;
+            border-top: 1px solid #111;
+            margin-top: 30px;
+        }
+
+        .footer a { color: #ff0000; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+
+        .matrix-rain {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.05;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #ff0000;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 { font-size: 24px; }
+            .stats { grid-template-columns: 1fr 1fr; }
+            .tools-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="particles" id="particles"></div>
+    <div class="matrix-rain" id="matrix"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">💀</div>
+            <h1>𝙃𝘼𝘾𝙆 𝙑𝙄𝘼 𝙇𝙄𝙉𝙆</h1>
+            <p class="sub">Advanced Hacking System</p>
+            <div class="typing">
+                <span id="typingText"></span><span class="cursor">█</span>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="icon">🎯</div>
+                <div class="number">22+</div>
+                <div class="label">طريقة اختراق</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">👥</div>
+                <div class="number">1,000+</div>
+                <div class="label">مستخدم نشط</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">📸</div>
+                <div class="number">5,000+</div>
+                <div class="label">ضحية تم اختراقها</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">⚡</div>
+                <div class="number">99%</div>
+                <div class="label">نسبة النجاح</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span>🛠️</span> أدوات الاختراق
+                <div class="line"></div>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">💀</div>
+                    <div class="tool-name">اختراق شامل</div>
+                    <div class="tool-desc">كاميرا، GPS، جهات اتصال، صور، فيديو</div>
+                    <div class="tool-price">⚡ مجاني</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📸</div>
+                    <div class="tool-name">اختراق الكاميرا</div>
+                    <div class="tool-desc">تصوير مباشر من كاميرا الضحية</div>
+                    <div class="tool-price">⚡ مجاني</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🎥</div>
+                    <div class="tool-name">اختراق فيديو</div>
+                    <div class="tool-desc">تسجيل فيديو من جهاز الضحية</div>
+                    <div class="tool-price">⚡ مجاني</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🎤</div>
+                    <div class="tool-name">تسجيل الصوت</div>
+                    <div class="tool-desc">تسجيل مقطع صوتي من المايك</div>
+                    <div class="tool-price">⚡ مجاني</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🖼️</div>
+                    <div class="tool-name">سحب الصور</div>
+                    <div class="tool-desc">سحب صور من معرض الضحية</div>
+                    <div class="tool-price">💰 11 نقطة</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📋</div>
+                    <div class="tool-name">سحب جهات الاتصال</div>
+                    <div class="tool-desc">سحب جميع الأرقام المخزنة</div>
+                    <div class="tool-price">💰 11 نقطة</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">💬</div>
+                    <div class="tool-name">اختراق واتساب</div>
+                    <div class="tool-desc">رقم + كود تحقق واتساب</div>
+                    <div class="tool-price">⚡ مجاني</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🔵</div>
+                    <div class="tool-name">اختراق فيسبوك</div>
+                    <div class="tool-desc">ايميل + باسورد الضحية</div>
+                    <div class="tool-price">⚡ مجاني</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📷</div>
+                    <div class="tool-name">اختراق انستغرام</div>
+                    <div class="tool-desc">ايميل + باسورد انستغرام</div>
+                    <div class="tool-price">⚡ مجاني</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🎁</div>
+                    <div class="tool-name">مسابقة الحلم</div>
+                    <div class="tool-desc">بيانات كاملة: اسم، هوية، عنوان</div>
+                    <div class="tool-price">⚡ مجاني</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span>🔗</span> روابط رسمية
+                <div class="line"></div>
+            </div>
+            <div class="links">
+                <a href="https://t.me/Iifgifufbot" class="link-card" target="_blank">
+                    <div class="link-icon">🤖</div>
+                    <div class="link-name">بوت HACK VIA LINK</div>
+                    <div class="link-desc">@Iifgifufbot</div>
+                </a>
+                <a href="https://t.me/chcudygid" class="link-card" target="_blank">
+                    <div class="link-icon">📢</div>
+                    <div class="link-name">قناة المطور</div>
+                    <div class="link-desc">@chcudygid</div>
+                </a>
+                <a href="https://t.me/ucydjj" class="link-card" target="_blank">
+                    <div class="link-icon">📢</div>
+                    <div class="link-name">قناة البوت</div>
+                    <div class="link-desc">@ucydjj</div>
+                </a>
+                <a href="https://t.me/Fufycyfy" class="link-card" target="_blank">
+                    <div class="link-icon">👨‍💻</div>
+                    <div class="link-name">المطور</div>
+                    <div class="link-desc">@Fufycyfy</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="dev-section">
+            <div class="dev-avatar">👨‍💻</div>
+            <div class="dev-info">
+                <h3>Fufycyfy</h3>
+                <p>🛡️ مطور HACK VIA LINK</p>
+                <p>📱 تيليجرام: <a href="https://t.me/Fufycyfy">@Fufycyfy</a></p>
+                <p>📢 القناة: <a href="https://t.me/chcudygid">@chcudygid</a></p>
+                <p>🤖 البوت: <a href="https://t.me/Iifgifufbot">@Iifgifufbot</a></p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 <a href="https://t.me/Fufycyfy">HACK VIA LINK</a>. جميع الحقوق محفوظة.</p>
+            <p style="margin-top:5px;">
+                <a href="https://t.me/chcudygid">قناة المطور</a> |
+                <a href="https://t.me/ucydjj">قناة البوت</a> |
+                <a href="https://t.me/Fufycyfy">المطور</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Telegram WebApp Scripts -->
+    <script>
+        var tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.setHeaderColor('#0a0a0a');
+        tg.setBackgroundColor('#0a0a0a');
+        
+        var BackButton = tg.BackButton;
+        BackButton.show();
+        BackButton.onClick(function() {
+            tg.close();
+        });
+        
+        var MainButton = tg.MainButton;
+        MainButton.setText('🚀 فتح البوت');
+        MainButton.setParams({ color: '#ff0000', text_color: '#ffffff' });
+        MainButton.show();
+        MainButton.onClick(function() {
+            tg.openTelegramLink('https://t.me/Iifgifufbot');
+        });
+    </script>
+
+    <!-- Main Scripts -->
+    <script>
+        function createParticles() {
+            var container = document.getElementById('particles');
+            for (var i = 0; i < 50; i++) {
+                var p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 8 + 's';
+                p.style.animationDuration = (Math.random() * 6 + 6) + 's';
+                container.appendChild(p);
+            }
+        }
+
+        function matrixRain() {
+            var container = document.getElementById('matrix');
+            var chars = '01HACKVIA';
+            var columns = Math.floor(window.innerWidth / 20);
+            
+            for (var i = 0; i < columns; i++) {
+                var drop = document.createElement('div');
+                drop.style.position = 'absolute';
+                drop.style.left = (i * 20) + 'px';
+                drop.style.top = Math.random() * -100 + 'px';
+                drop.style.animation = 'fallDown ' + (Math.random() * 3 + 2) + 's linear infinite';
+                drop.style.animationDelay = Math.random() * 5 + 's';
+                drop.textContent = chars[Math.floor(Math.random() * chars.length)];
+                container.appendChild(drop);
+            }
+        }
+
+        function typeWriter() {
+            var texts = [
+                '> Accessing mainframe...',
+                '> Loading exploits...',
+                '> Bypassing security...',
+                '> System ready.',
+                '> ./hack_via_link --launch'
+            ];
+            var current = 0;
+            var charIndex = 0;
+            var typingElement = document.getElementById('typingText');
+            var isDeleting = false;
+
+            function type() {
+                var text = texts[current];
+                
+                if (!isDeleting) {
+                    typingElement.textContent = text.substring(0, charIndex + 1);
+                    charIndex++;
+                    
+                    if (charIndex === text.length) {
+                        isDeleting = true;
+                        setTimeout(type, 2000);
+                        return;
+                    }
+                } else {
+                    typingElement.textContent = text.substring(0, charIndex - 1);
+                    charIndex--;
+                    
+                    if (charIndex === 0) {
+                        isDeleting = false;
+                        current = (current + 1) % texts.length;
+                    }
+                }
+                
+                setTimeout(type, isDeleting ? 30 : 80);
+            }
+            
+            type();
+        }
+
+        createParticles();
+        matrixRain();
+        typeWriter();
+    </script>
+</body>
+</html>
